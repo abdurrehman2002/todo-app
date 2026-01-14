@@ -3,6 +3,8 @@ import '../style/addtask.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { apiRequest } from '../utils/api';
+
 function UpdateTask() {
     const [taskData, setTaskData] = useState({ title: '', description: '' });
     const { id } = useParams();
@@ -13,31 +15,32 @@ function UpdateTask() {
     }, [])
 
     const getTask = async (id) => {
-        let task = await fetch(`http://localhost:3200/task/` + id, {
-            credentials: "include"
-        })
-        task = await task.json()
-        if (task.result) {
-            setTaskData(task.result)
+        try {
+            const task = await apiRequest(`/task/${id}`);
+            if (task.result) {
+                setTaskData(task.result)
+            }
+        } catch (error) {
+            toast.error("Failed to fetch task details");
         }
     }
 
     const handleUpdateTask = async () => {
-        let task = await fetch("http://localhost:3200/update-task", {
-            method: "put",
-            body: JSON.stringify(taskData),
-            credentials: "include",
-            headers: {
-                "Content-Type": "Application/Json"
+        try {
+            const task = await apiRequest("/update-task", {
+                method: "PUT",
+                body: JSON.stringify(taskData),
+            });
+
+            if (task.success) {
+                toast.success("Task updated successfully");
+                navigate('/')
+            } else {
+                toast.error("Failed to update task");
             }
-        });
-        task = await task.json()
-        if (task) {
-            toast.success("Task updated successfully");
-            navigate('/')
+        } catch (error) {
+            toast.error("Error updating task");
         }
-
-
     }
 
     return (

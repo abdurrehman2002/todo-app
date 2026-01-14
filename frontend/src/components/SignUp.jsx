@@ -3,6 +3,8 @@ import '../style/addtask.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { apiRequest } from '../utils/api';
+
 function SignUp() {
     const [userData, setUserData] = useState();
     const navigate = useNavigate();
@@ -16,22 +18,23 @@ function SignUp() {
 
     const handleSignup = async () => {
         console.log(userData)
-        let result = await fetch('http://localhost:3200/signup', {
-            method: 'Post',
-            body: JSON.stringify(userData),
-            headers: {
-                'Content-Type': 'Application/Json'
+        try {
+            const result = await apiRequest('/signup', {
+                method: 'POST',
+                body: JSON.stringify(userData),
+            });
+
+            if (result.success) {
+                console.log(result);
+                document.cookie = "token=" + result.token
+                localStorage.setItem('login', userData.email);
+                toast.success("Signup successful");
+                navigate("/")
+            } else {
+                toast.error("Signup failed");
             }
-        })
-        result = await result.json()
-        if (result.success) {
-            console.log(result);
-            document.cookie = "token=" + result.token
-            localStorage.setItem('login', userData.email);
-            toast.success("Signup successful");
-            navigate("/")
-        } else {
-            toast.error("Signup failed");
+        } catch (error) {
+            toast.error("Signup error");
         }
     }
 

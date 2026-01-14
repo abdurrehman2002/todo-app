@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../style/addtask.css';
 import { toast } from 'react-toastify';
 
+import { apiRequest } from '../utils/api';
+
 function Login() {
     const [userData, setUserData] = useState();
     const navigate = useNavigate();
@@ -15,23 +17,24 @@ function Login() {
 
     const handleLogin = async () => {
         console.log(userData)
-        let result = await fetch('http://localhost:3200/login', {
-            method: 'Post',
-            body: JSON.stringify(userData),
-            headers: {
-                'Content-Type': 'Application/Json'
+        try {
+            const result = await apiRequest('/login', {
+                method: 'POST',
+                body: JSON.stringify(userData),
+            });
+
+            if (result.success) {
+                console.log(result);
+                document.cookie = "token=" + result.token;
+                localStorage.setItem('login', userData.email);
+                window.dispatchEvent(new Event('localStorage-change'))
+                toast.success("Login successful");
+                navigate("/")
+            } else {
+                toast.error("Invalid credentials or server error");
             }
-        })
-        result = await result.json()
-        if (result.success) {
-            console.log(result);
-            document.cookie = "token=" + result.token;
-            localStorage.setItem('login', userData.email);
-            window.dispatchEvent(new Event('localStorage-change'))
-            toast.success("Login successful");
-            navigate("/")
-        } else {
-            toast.error("Invalid credentials or server error");
+        } catch (error) {
+            toast.error("Login failed");
         }
     }
 

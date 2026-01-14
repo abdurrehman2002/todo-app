@@ -3,27 +3,29 @@ import '../style/addtask.css';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { apiRequest } from '../utils/api';
+
 function AddTask() {
     const [taskData, setTaskData] = useState();
     const navigate = useNavigate();
 
     const handleAddTask = async () => {
         console.log(taskData)
-        let result = await fetch('http://localhost:3200/add-task', {
-            method: 'Post',
-            body: JSON.stringify(taskData),
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'Application/Json'
+        try {
+            const result = await apiRequest('/add-task', {
+                method: 'POST',
+                body: JSON.stringify(taskData),
+            });
+
+            if (result.success) {
+                navigate("/")
+                toast.success("Task added successfully");
+                console.log('New task added')
+            } else {
+                toast.error("Failed to add task");
             }
-        })
-        result = await result.json()
-        if (result.success) {
-            navigate("/")
-            toast.success("Task added successfully");
-            console.log('New task added')
-        } else {
-            toast.error("Failed to add task");
+        } catch (error) {
+            toast.error("Error adding task");
         }
     }
     return (

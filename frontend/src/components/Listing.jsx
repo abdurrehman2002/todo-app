@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from "react"
 import '../style/list.css'
 import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
+import { apiRequest } from '../utils/api';
 
 function Listing() {
     const [taskData, setTaskData] = useState([]);
@@ -13,24 +14,21 @@ function Listing() {
 
     const getListData = async () => {
         try {
-            let list = await fetch('http://localhost:3200/tasks', {
-                credentials: "include"
-            });
-            list = await list.json()
+            const list = await apiRequest('/tasks');
             if (list.success) {
                 setTaskData(list.result)
             } else {
                 toast.error('Failed to fetch tasks');
             }
         } catch (error) {
+            console.error(error);
             toast.error('Network error');
         }
     }
 
     const deleteTask = async (id) => {
         try {
-            let item = await fetch('http://localhost:3200/delete/' + id, { method: 'delete', credentials: 'include', });
-            item = await item.json()
+            const item = await apiRequest('/delete/' + id, { method: 'DELETE' });
             if (item.success) {
                 toast.success("Task deleted successfully");
                 getListData()
@@ -63,17 +61,12 @@ function Listing() {
 
     const deleteMultiple = async () => {
         try {
-            let item = await fetch('http://localhost:3200/delete-multiple/',
+            const item = await apiRequest('/delete-multiple/',
                 {
-                    method: 'delete',
+                    method: 'DELETE',
                     body: JSON.stringify(selectedTask),
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'Application/Json'
-                    }
                 }
             );
-            item = await item.json()
             if (item.success) {
                 toast.success("Selected tasks deleted");
                 getListData();
