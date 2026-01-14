@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './style/App.css'
-import NavBar from './components/NavBar'
 import { Route, Routes } from 'react-router-dom'
+import NavBar from './components/NavBar'
 import AddTask from './components/AddTask';
 import UpdateTask from './components/UpdateTask';
 import SignUp from './components/SignUp';
