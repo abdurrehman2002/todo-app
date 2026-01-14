@@ -52,11 +52,10 @@ function Listing() {
     const selectSingleItem = (id) => {
         if (selectedTask.includes(id)) {
             let items = selectedTask.filter((item) => item != id)
-            setSelectedTask([items])
+            setSelectedTask(items)
         } else {
             setSelectedTask([id, ...selectedTask])
         }
-
     }
 
     const deleteMultiple = async () => {
