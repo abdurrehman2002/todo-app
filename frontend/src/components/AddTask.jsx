@@ -5,12 +5,16 @@ import { toast } from 'react-toastify';
 
 import { apiRequest } from '../utils/api';
 
+import Loader from '../components/Loader';
+
 function AddTask() {
     const [taskData, setTaskData] = useState();
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleAddTask = async () => {
         console.log(taskData)
+        setLoading(true);
         try {
             const result = await apiRequest('/add-task', {
                 method: 'POST',
@@ -26,19 +30,24 @@ function AddTask() {
             }
         } catch (error) {
             toast.error("Error adding task");
+        } finally {
+            setLoading(false);
         }
     }
     return (
-        <div className="container">
-            <h1>Add New Task</h1>
+        <>
+            {loading && <Loader />}
+            <div className="container">
+                <h1>Add New Task</h1>
 
-            <label htmlFor="">Title</label>
-            <input onChange={(event) => setTaskData({ ...taskData, title: event.target.value })} type="text" name="title" placeholder="Enter task title" />
-            <label htmlFor="">Description</label>
-            <textarea onChange={(event) => setTaskData({ ...taskData, description: event.target.value })} rows={4} name="description" placeholder="Enter task description" id=""></textarea>
-            <button onClick={handleAddTask} className="submit">Add New Task</button>
+                <label htmlFor="">Title</label>
+                <input onChange={(event) => setTaskData({ ...taskData, title: event.target.value })} type="text" name="title" placeholder="Enter task title" />
+                <label htmlFor="">Description</label>
+                <textarea onChange={(event) => setTaskData({ ...taskData, description: event.target.value })} rows={4} name="description" placeholder="Enter task description" id=""></textarea>
+                <button onClick={handleAddTask} className="submit">Add New Task</button>
 
-        </div>
+            </div>
+        </>
     )
 }
 

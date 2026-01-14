@@ -5,8 +5,11 @@ import { toast } from 'react-toastify';
 
 import { apiRequest } from '../utils/api';
 
+import Loader from '../components/Loader';
+
 function Login() {
     const [userData, setUserData] = useState();
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -17,6 +20,7 @@ function Login() {
 
     const handleLogin = async () => {
         console.log(userData)
+        setLoading(true);
         try {
             const result = await apiRequest('/login', {
                 method: 'POST',
@@ -35,27 +39,32 @@ function Login() {
             }
         } catch (error) {
             toast.error("Login failed");
+        } finally {
+            setLoading(false);
         }
     }
 
 
     return (
-        <div className="container">
-            <h1>Login</h1>
-            <label htmlFor="">Email</label>
-            <input
-                onChange={(event) => setUserData({ ...userData, email: event.target.value })}
-                type="text" name="email" placeholder="Enter user email" />
+        <>
+            {loading && <Loader />}
+            <div className="container">
+                <h1>Login</h1>
+                <label htmlFor="">Email</label>
+                <input
+                    onChange={(event) => setUserData({ ...userData, email: event.target.value })}
+                    type="text" name="email" placeholder="Enter user email" />
 
-            <label htmlFor="">Password</label>
-            <input
-                onChange={(event) => setUserData({ ...userData, password: event.target.value })}
-                type="password" name="password" placeholder="Enter user password" />
+                <label htmlFor="">Password</label>
+                <input
+                    onChange={(event) => setUserData({ ...userData, password: event.target.value })}
+                    type="password" name="password" placeholder="Enter user password" />
 
-            <button onClick={handleLogin} className="submit">Login</button>
-            <Link className='link' to="/signup">Sign Up</Link>
+                <button onClick={handleLogin} className="submit">Login</button>
+                <Link className='link' to="/signup">Sign Up</Link>
 
-        </div>
+            </div>
+        </>
     )
 }
 

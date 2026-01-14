@@ -5,8 +5,11 @@ import { toast } from 'react-toastify';
 
 import { apiRequest } from '../utils/api';
 
+import Loader from '../components/Loader';
+
 function UpdateTask() {
     const [taskData, setTaskData] = useState({ title: '', description: '' });
+    const [loading, setLoading] = useState(true);
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -15,6 +18,7 @@ function UpdateTask() {
     }, [])
 
     const getTask = async (id) => {
+        setLoading(true);
         try {
             const task = await apiRequest(`/task/${id}`);
             if (task.result) {
@@ -22,10 +26,13 @@ function UpdateTask() {
             }
         } catch (error) {
             toast.error("Failed to fetch task details");
+        } finally {
+            setLoading(false);
         }
     }
 
     const handleUpdateTask = async () => {
+        setLoading(true);
         try {
             const task = await apiRequest("/update-task", {
                 method: "PUT",
@@ -40,20 +47,25 @@ function UpdateTask() {
             }
         } catch (error) {
             toast.error("Error updating task");
+        } finally {
+            setLoading(false);
         }
     }
 
     return (
-        <div className="container">
-            <h1>Update Task</h1>
+        <>
+            {loading && <Loader />}
+            <div className="container">
+                <h1>Update Task</h1>
 
-            <label htmlFor="">Title</label>
-            <input value={taskData?.title || ''} onChange={(event) => setTaskData({ ...taskData, title: event.target.value })} type="text" name="title" placeholder="Enter task title" />
-            <label htmlFor="">Description</label>
-            <textarea value={taskData?.description || ''} onChange={(event) => setTaskData({ ...taskData, description: event.target.value })} rows={4} name="description" placeholder="Enter task description" id=""></textarea>
-            <button onClick={handleUpdateTask} className="submit">Update Task</button>
+                <label htmlFor="">Title</label>
+                <input value={taskData?.title || ''} onChange={(event) => setTaskData({ ...taskData, title: event.target.value })} type="text" name="title" placeholder="Enter task title" />
+                <label htmlFor="">Description</label>
+                <textarea value={taskData?.description || ''} onChange={(event) => setTaskData({ ...taskData, description: event.target.value })} rows={4} name="description" placeholder="Enter task description" id=""></textarea>
+                <button onClick={handleUpdateTask} className="submit">Update Task</button>
 
-        </div>
+            </div>
+        </>
     )
 }
 
