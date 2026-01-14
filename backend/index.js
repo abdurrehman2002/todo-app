@@ -175,4 +175,8 @@ function verifyJWTToken(req, resp, next) {
 
 
 
-app.listen(3200, () => console.log("Server running on port 3200"));
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(3200, () => console.log("Server running on port 3200"));
+}
+
+export default app;
