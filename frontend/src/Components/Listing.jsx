@@ -3,7 +3,7 @@ import '../style/list.css'
 import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 
-function List() {
+function Listing() {
     const [taskData, setTaskData] = useState([]);
     const [selectedTask, setSelectedTask] = useState([]);
 
@@ -133,4 +133,4 @@ function List() {
     )
 }
 
-export default List
+export default Listing;

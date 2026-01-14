@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import './style/App.css'
-import NavBar from './Components/Navbar'
+import NavBar from './components/Navbar'
 import { Route, Routes } from 'react-router-dom'
-import AddTask from './Components/AddTask';
-import List from './Components/List';
-import UpdateTask from './Components/UpdateTask';
-import SignUp from './Components/SignUp';
-import Login from './Components/Login';
-import Protected from './Components/Protected';
+import AddTask from './components/AddTask';
+import UpdateTask from './components/UpdateTask';
+import SignUp from './components/SignUp';
+import Login from './components/Login';
+import Protected from './components/Protected';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Listing from './components/Listing';
 
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
       <ToastContainer position="top-right" autoClose={3000} />
       <NavBar />
       <Routes>
-        <Route path='/' element={<Protected><List /></Protected>} />
+        <Route path='/' element={<Protected><Listing /></Protected>} />
         <Route path='/add' element={<Protected><AddTask /></Protected>} />
         <Route path='/update/:id' element={<UpdateTask />} />
         <Route path='/login' element={<Login />} />
