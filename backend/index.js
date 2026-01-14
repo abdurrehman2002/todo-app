@@ -158,7 +158,14 @@ app.delete("/delete-multiple", verifyJWTToken, async (req, resp) => {
 
 
 function verifyJWTToken(req, resp, next) {
-    const token = req.cookies['token'];
+    let token = req.cookies['token'];
+
+    if (!token && req.headers['authorization']) {
+        const authHeader = req.headers['authorization'];
+        if (authHeader.startsWith('Bearer ')) {
+            token = authHeader.split(' ')[1];
+        }
+    }
     jwt.verify(token, 'Google', (error, decoded) => {
         if (error) {
             return resp.send({
