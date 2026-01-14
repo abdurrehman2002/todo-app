@@ -1,0 +1,16 @@
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.link {
+    text-decoration: none;
+    margin-top: 15px;
+    display: block;
+    color: var(--primary-color);
+}
+
+.link:hover {
+    text-decoration: underline;
+}
