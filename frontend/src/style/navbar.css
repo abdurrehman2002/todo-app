@@ -112,7 +112,8 @@
         gap: 2rem;
         transition: right 0.3s ease-in-out;
         box-shadow: var(--shadow-xl);
-        padding-top: 60px;
+        padding-top: 0;
+        /* Remove padding to allow true centering */
         border-left: 1px solid var(--border-color);
         z-index: 1000;
         /* Ensure backdrop filter applies if transparent */
